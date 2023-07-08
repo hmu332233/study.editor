@@ -6,11 +6,18 @@ import "@blocknote/core/style.css";
 function BlockNotePage() {
   // Creates a new editor instance.
   const editor: BlockNoteEditor | null = useBlockNote({
-    theme: "dark"
+    theme: "light",
+    defaultStyles: false,
+    editorDOMAttributes: { class: 'prose lg:prose-xl' },
   });
 
   // Renders the editor instance using a React component.
-  return <BlockNoteView editor={editor} />;
+  return (
+    <div className="w-full">
+      <h1 className="font-bold text-xl mb-8">BlockNote</h1>
+      <BlockNoteView editor={editor} />
+    </div>
+  );
 };
 
 export default BlockNotePage;

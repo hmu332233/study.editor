@@ -16,7 +16,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head>
+        <link rel="stylesheet" as="style" crossOrigin='anonymous' href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+      </head>
+      <body className={inter.className}>
+        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+            {children}
+        </main>
+      </body>
     </html>
   )
 }
