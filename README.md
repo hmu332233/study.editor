@@ -1,1 +1,6 @@
-# study.editor
+# STUDY.EDITOR
+
+- blocknote
+- editorjs
+- tiptap
+- plate
