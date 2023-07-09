@@ -214,8 +214,15 @@ function Tiptap() {
       },
     },
     extensions: [
-      TaskList,
+      TaskList.configure({
+        HTMLAttributes: {
+          class: "not-prose pl-2",
+        },
+      }),
       TaskItem.configure({
+        HTMLAttributes: {
+          class: "flex items-start",
+        },
         nested: true,
       }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -244,6 +251,7 @@ function Tiptap() {
 
           return '내용을 입력하세요. 명령어는 \'/\'을 입력하세요'
         },
+        includeChildren: true, // 자식 노드들에도 placeholder 띄울지 여부
       }),
     ],
     content: defaultContents,
