@@ -208,6 +208,11 @@ lowlight.registerLanguage('ts', ts)
 
 function Tiptap() {
   const editor = useEditor({
+    editorProps: {
+      attributes: {
+        class: 'prose focus:outline-none',
+      },
+    },
     extensions: [
       TaskList,
       TaskItem.configure({
@@ -249,9 +254,7 @@ function Tiptap() {
   return (
     <div>
       <MenuBar editor={editor} />
-      <div className="prose">
-        <EditorContent editor={editor} />
-      </div>
+      <EditorContent editor={editor} />
     </div>
   )
 }
