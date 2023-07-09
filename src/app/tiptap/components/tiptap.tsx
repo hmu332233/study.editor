@@ -1,12 +1,34 @@
 // import './styles.scss'
 
+import { lowlight } from 'lowlight'
+
+import Placeholder from '@tiptap/extension-placeholder'
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
-import { EditorContent, useEditor } from '@tiptap/react'
+import { EditorContent, useEditor, ReactNodeViewRenderer } from '@tiptap/react'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import type { Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 import React from 'react'
+
+import cn from 'classnames';
+
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
+
+import CodeBlock from './codeBlock';
+
+import { defaultContents } from '../constants';
+
+function Button({ children, active, disabled, onClick, ...props }: { disabled: boolean, active: boolean, onClick: () => any, children: React.ReactNode }) {
+  return <button className={cn('btn btn-sm btn-neutral', !active && 'btn-outline', disabled && 'btn-disabled')} disabled={disabled} {...props}>{children}</button>
+}
+
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
@@ -14,8 +36,8 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
   }
 
   return (
-    <>
-      <button
+    <div className='flex gap-2 overflow-scroll pb-3'>
+      <Button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={
           !editor.can()
@@ -24,11 +46,11 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
             .toggleBold()
             .run()
         }
-        className={editor.isActive('bold') ? 'is-active' : ''}
+        active={editor.isActive('bold')}
       >
         bold
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleItalic().run()}
         disabled={
           !editor.can()
@@ -37,11 +59,11 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
             .toggleItalic()
             .run()
         }
-        className={editor.isActive('italic') ? 'is-active' : ''}
+        active={editor.isActive('italic')}
       >
         italic
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={
           !editor.can()
@@ -50,11 +72,11 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
             .toggleStrike()
             .run()
         }
-        className={editor.isActive('strike') ? 'is-active' : ''}
+        active={editor.isActive('strike')}
       >
         strike
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleCode().run()}
         disabled={
           !editor.can()
@@ -63,89 +85,89 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
             .toggleCode()
             .run()
         }
-        className={editor.isActive('code') ? 'is-active' : ''}
+        active={editor.isActive('code')}
       >
         code
-      </button>
-      <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+      </Button>
+      <Button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
         clear marks
-      </button>
-      <button onClick={() => editor.chain().focus().clearNodes().run()}>
+      </Button>
+      <Button onClick={() => editor.chain().focus().clearNodes().run()}>
         clear nodes
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().setParagraph().run()}
-        className={editor.isActive('paragraph') ? 'is-active' : ''}
+        active={editor.isActive('paragraph')}
       >
         paragraph
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
+        active={editor.isActive('heading', { level: 1 })}
       >
         h1
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
+        active={editor.isActive('heading', { level: 2 })}
       >
         h2
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
+        active={editor.isActive('heading', { level: 3 })}
       >
         h3
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-        className={editor.isActive('heading', { level: 4 }) ? 'is-active' : ''}
+        active={editor.isActive('heading', { level: 4 })}
       >
         h4
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
-        className={editor.isActive('heading', { level: 5 }) ? 'is-active' : ''}
+        active={editor.isActive('heading', { level: 5 })}
       >
         h5
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
-        className={editor.isActive('heading', { level: 6 }) ? 'is-active' : ''}
+        active={editor.isActive('heading', { level: 6 })}
       >
         h6
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive('bulletList') ? 'is-active' : ''}
+        active={editor.isActive('bulletList')}
       >
         bullet list
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={editor.isActive('orderedList') ? 'is-active' : ''}
+        active={editor.isActive('orderedList')}
       >
         ordered list
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        className={editor.isActive('codeBlock') ? 'is-active' : ''}
+        active={editor.isActive('codeBlock')}
       >
         code block
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={editor.isActive('blockquote') ? 'is-active' : ''}
+        active={editor.isActive('blockquote')}
       >
         blockquote
-      </button>
-      <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+      </Button>
+      <Button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
         horizontal rule
-      </button>
-      <button onClick={() => editor.chain().focus().setHardBreak().run()}>
+      </Button>
+      <Button onClick={() => editor.chain().focus().setHardBreak().run()}>
         hard break
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().undo().run()}
         disabled={
           !editor.can()
@@ -156,8 +178,8 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
         }
       >
         undo
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().redo().run()}
         disabled={
           !editor.can()
@@ -168,22 +190,31 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
         }
       >
         redo
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => editor.chain().focus().setColor('#958DF1').run()}
-        className={editor.isActive('textStyle', { color: '#958DF1' }) ? 'is-active' : ''}
+        active={editor.isActive('textStyle', { color: '#958DF1' })}
       >
         purple
-      </button>
-    </>
+      </Button>
+    </div>
   )
 }
+
+lowlight.registerLanguage('html', html)
+lowlight.registerLanguage('css', css)
+lowlight.registerLanguage('js', js)
+lowlight.registerLanguage('ts', ts)
 
 function Tiptap() {
   const editor = useEditor({
     extensions: [
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+      }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
-      // TextStyle.configure({ types: [ListItem.name] }),
+      TextStyle.configure(),
       StarterKit.configure({
         bulletList: {
           keepMarks: true,
@@ -194,38 +225,26 @@ function Tiptap() {
           keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
         },
       }),
+      CodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlock);
+        }
+      }).configure({ lowlight }),
+      Placeholder.configure({
+        placeholder: ({ node }) => {
+          console.log(node)
+          if (node.type.name === 'heading') {
+            return '제목을 입력하세요'
+          }
+
+          return '내용을 입력하세요. 명령어는 \'/\'을 입력하세요'
+        },
+      }),
     ],
-    content: `
-      <h2>
-        Hi there,
-      </h2>
-      <p>
-        this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-      </p>
-      <ul>
-        <li>
-          That’s a bullet list with one …
-        </li>
-        <li>
-          … or two list items.
-        </li>
-      </ul>
-      <p>
-        Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
-      </p>
-      <pre><code class="language-css">body {
-  display: none;
-}</code></pre>
-      <p>
-        I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
-      </p>
-      <blockquote>
-        Wow, that’s amazing. Good work, boy! 👏
-        <br />
-        — Mom
-      </blockquote>
-    `,
+    content: defaultContents,
   })
+
+  console.log(editor?.getJSON())
 
   return (
     <div>
