@@ -25,7 +25,7 @@ import CodeBlock from './codeBlock';
 
 import { defaultContents } from '../constants';
 
-function Button({ children, active, disabled, onClick, ...props }: { disabled: boolean, active: boolean, onClick: () => any, children: React.ReactNode }) {
+function Button({ children, active, disabled, onClick, ...props }: { disabled?: boolean, active?: boolean, onClick: () => any, children: React.ReactNode }) {
   return <button className={cn('btn btn-sm btn-neutral', !active && 'btn-outline', disabled && 'btn-disabled')} disabled={disabled} {...props}>{children}</button>
 }
 
