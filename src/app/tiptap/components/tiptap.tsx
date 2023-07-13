@@ -2,6 +2,7 @@
 
 import { lowlight } from 'lowlight'
 
+import Youtube from '@tiptap/extension-youtube'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
@@ -215,6 +216,7 @@ function Tiptap() {
       },
     },
     extensions: [
+      Youtube,
       Link.configure({
         HTMLAttributes: {
           class: 'link',

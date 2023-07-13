@@ -294,6 +294,27 @@ export const defaultContents = {
             "content": [
                 {
                     "type": "text",
+                    "text": "아래는 유튜브입니다 (유튜브 링크를 바로 붙여넣기 가능)"
+                }
+            ]
+        },
+        {
+            "type": "youtube",
+            "attrs": {
+                "src": "https://youtu.be/A5AV5HAKjh0",
+                "start": 0,
+                "width": 640,
+                "height": 480
+            }
+        },
+        {
+            "type": "paragraph"
+        },
+        {
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
                     "text": "I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too."
                 }
             ]
