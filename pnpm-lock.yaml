@@ -20,6 +20,9 @@ dependencies:
   '@tiptap/extension-color':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/extension-text-style@2.0.3)
+  '@tiptap/extension-link':
+    specifier: ^2.0.3
+    version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
   '@tiptap/extension-list-item':
     specifier: ^2.0.3
     version: 2.0.3(@tiptap/core@2.0.3)

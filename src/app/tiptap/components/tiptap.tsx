@@ -12,6 +12,7 @@ import type { Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
+import Link from '@tiptap/extension-link'
 import React from 'react'
 
 import cn from 'classnames';
@@ -214,6 +215,11 @@ function Tiptap() {
       },
     },
     extensions: [
+      Link.configure({
+        HTMLAttributes: {
+          class: 'link',
+        },
+      }),
       TaskList.configure({
         HTMLAttributes: {
           class: "not-prose pl-2",
