@@ -244,6 +244,18 @@ function Tiptap() {
           keepMarks: true,
           keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
         },
+        // dropcursor: {
+        //   color: "#DBEAFE",
+        //   width: 4,
+        // },
+        // gapcursor: false,
+        code: {
+          HTMLAttributes: {
+            class:
+              "rounded-md bg-stone-200 px-1.5 py-1 font-medium text-stone-900",
+            spellcheck: "false",
+          },
+        },
       }),
       CodeBlockLowlight.extend({
         addNodeView() {

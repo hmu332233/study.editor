@@ -258,6 +258,28 @@ export const defaultContents = {
             "content": [
                 {
                     "type": "text",
+                    "text": "이것은 "
+                },
+                {
+                    "type": "text",
+                    "marks": [
+                        {
+                            "type": "code"
+                        }
+                    ],
+                    "text": "Code"
+                },
+                {
+                    "type": "text",
+                    "text": " 입니다"
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
                     "text": "아래는 Horizontal Rule입니다"
                 }
             ]
