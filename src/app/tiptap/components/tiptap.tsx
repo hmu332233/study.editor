@@ -1,6 +1,6 @@
 // import './styles.scss'
 
-import { MdFormatBold, MdFormatItalic, MdFormatStrikethrough, MdCode, MdFormatListBulleted, MdFormatListNumbered, MdFormatQuote } from 'react-icons/md';
+import { MdFormatColorText, MdFormatBold, MdFormatItalic, MdFormatStrikethrough, MdCode, MdFormatListBulleted, MdFormatListNumbered, MdFormatQuote } from 'react-icons/md';
 import { lowlight } from 'lowlight'
 
 
@@ -29,20 +29,7 @@ import html from 'highlight.js/lib/languages/xml'
 import CodeBlock from './codeBlock';
 
 import { defaultContents } from '../constants';
-
-function Button({ children, active = false, disabled = false, onClick, title }: { active?: boolean, disabled?: boolean, onClick: () => any, children: React.ReactNode, title: string }) {
-  const isStringTypeChildren = typeof children === 'string';
-  return (
-    <button
-      title={title}
-      className={cn('btn btn-sm btn-neutral', !isStringTypeChildren && 'btn-square text-xl', !active && 'btn-outline', disabled && 'btn-disabled')}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-}
+import ToolBox from './toolbox';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
@@ -51,49 +38,42 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
 
   const buttons = [
     {
-      icon: MdFormatBold,
+      icon: <MdFormatBold size="1em" />,
       onClick: () => editor.chain().focus().toggleBold().run(),
       canRun: editor.can().chain().focus().toggleBold().run(),
       isActive: editor.isActive('bold'),
       title: 'bold'
     },
     {
-      icon: MdFormatItalic,
+      icon: <MdFormatItalic />,
       onClick: () => editor.chain().focus().toggleItalic().run(),
       canRun: editor.can().chain().focus().toggleItalic().run(),
       isActive: editor.isActive('italic'),
       title: 'italic'
     },
     {
-      icon: MdFormatStrikethrough,
+      icon: <MdFormatStrikethrough />,
       onClick: () => editor.chain().focus().toggleStrike().run(),
       canRun: editor.can().chain().focus().toggleStrike().run(),
       isActive: editor.isActive('strike'),
       title: 'strike'
     },
     {
-      icon: MdCode,
+      icon: <MdCode />,
       onClick: () => editor.chain().focus().toggleCode().run(),
       canRun: editor.can().chain().focus().toggleCode().run(),
       isActive: editor.isActive('code'),
       title: 'code'
     },
     {
-      icon: MdFormatParagraph,
-      onClick: () => editor.chain().focus().setParagraph().run(),
-      canRun: true,
-      isActive: editor.isActive('paragraph'),
-      title: 'paragraph'
-    },
-    {
-      icon: MdFormatListBulleted,
+      icon: <MdFormatListBulleted />,
       onClick: () => editor.chain().focus().toggleBulletList().run(),
       canRun: true,
       isActive: editor.isActive('bulletList'),
       title: 'bullet list'
     },
     {
-      icon: MdFormatListNumbered,
+      icon: <MdFormatListNumbered />,
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
       canRun: true,
       isActive: editor.isActive('orderedList'),
@@ -142,13 +122,14 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
       title: 'code block'
     },
     {
-      icon: MdFormatQuote,
+      icon: <MdFormatQuote />,
       onClick: () => editor.chain().focus().toggleBlockquote().run(),
       canRun: true,
       isActive: editor.isActive('blockquote'),
       title: 'blockquote'
     },
     {
+      icon: <MdFormatColorText color='#958DF1' />,
       onClick: () => editor.chain().focus().setColor('#958DF1').run(),
       canRun: true,
       isActive: editor.isActive('textStyle', { color: '#958DF1' }),
@@ -193,22 +174,7 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
   ];
 
   return (
-    <div className='flex gap-2 overflow-scroll pb-3'>
-      {buttons.map((button, index) => {
-        const Icon = button.icon;
-        return (
-          <Button
-            key={index}
-            onClick={button.onClick}
-            disabled={!button.canRun}
-            active={button.isActive}
-            title={button.title}
-          >
-            {button.icon ? <Icon /> : button.title}
-          </Button>
-        );
-      })}
-    </div>
+    <ToolBox buttons={buttons}/>
   );
 }
 
@@ -219,49 +185,48 @@ const PopupMenu = ({ editor, tippyOptions }: { editor: Editor | null, tippyOptio
 
   const buttons = [
     {
-      icon: MdFormatBold,
+      icon: <MdFormatBold size="1em" />,
       onClick: () => editor.chain().focus().toggleBold().run(),
       canRun: editor.can().chain().focus().toggleBold().run(),
       isActive: editor.isActive('bold'),
       title: 'bold'
     },
     {
-      icon: MdFormatItalic,
+      icon: <MdFormatItalic />,
       onClick: () => editor.chain().focus().toggleItalic().run(),
       canRun: editor.can().chain().focus().toggleItalic().run(),
       isActive: editor.isActive('italic'),
       title: 'italic'
     },
     {
-      icon: MdFormatStrikethrough,
+      icon: <MdFormatStrikethrough />,
       onClick: () => editor.chain().focus().toggleStrike().run(),
       canRun: editor.can().chain().focus().toggleStrike().run(),
       isActive: editor.isActive('strike'),
       title: 'strike'
     },
     {
-      icon: MdCode,
+      icon: <MdCode />,
       onClick: () => editor.chain().focus().toggleCode().run(),
       canRun: editor.can().chain().focus().toggleCode().run(),
       isActive: editor.isActive('code'),
       title: 'code'
     },
+    // {
+    //   onClick: () => editor.chain().focus().setParagraph().run(),
+    //   canRun: true,
+    //   isActive: editor.isActive('paragraph'),
+    //   title: 'paragraph'
+    // },
     {
-      icon: MdFormatParagraph,
-      onClick: () => editor.chain().focus().setParagraph().run(),
-      canRun: true,
-      isActive: editor.isActive('paragraph'),
-      title: 'paragraph'
-    },
-    {
-      icon: MdFormatListBulleted,
+      icon: <MdFormatListBulleted />,
       onClick: () => editor.chain().focus().toggleBulletList().run(),
       canRun: true,
       isActive: editor.isActive('bulletList'),
       title: 'bullet list'
     },
     {
-      icon: MdFormatListNumbered,
+      icon: <MdFormatListNumbered />,
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
       canRun: true,
       isActive: editor.isActive('orderedList'),
@@ -310,62 +275,24 @@ const PopupMenu = ({ editor, tippyOptions }: { editor: Editor | null, tippyOptio
       title: 'code block'
     },
     {
-      icon: MdFormatQuote,
+      icon: <MdFormatQuote />,
       onClick: () => editor.chain().focus().toggleBlockquote().run(),
       canRun: true,
       isActive: editor.isActive('blockquote'),
       title: 'blockquote'
     },
     {
+      icon: <MdFormatColorText color='#958DF1' />,
       onClick: () => editor.chain().focus().setColor('#958DF1').run(),
       canRun: true,
       isActive: editor.isActive('textStyle', { color: '#958DF1' }),
       title: 'purple'
     },
-    {
-      onClick: () => editor.chain().focus().unsetAllMarks().run(),
-      canRun: true,
-      isActive: false,
-      title: 'clear marks'
-    },
-    {
-      onClick: () => editor.chain().focus().clearNodes().run(),
-      canRun: true,
-      isActive: false,
-      title: 'clear nodes'
-    },
-    {
-      onClick: () => editor.chain().focus().setHorizontalRule().run(),
-      canRun: true,
-      isActive: false,
-      title: 'horizontal rule'
-    },
-    {
-      onClick: () => editor.chain().focus().setHardBreak().run(),
-      canRun: true,
-      isActive: false,
-      title: 'hard break'
-    },
   ];
 
   return (
     <BubbleMenu editor={editor} tippyOptions={tippyOptions}>
-      <div className='flex gap-2 overflow-scroll pb-3'>
-        {buttons.map((button, index) => {
-          const Icon = button.icon;
-          return (
-            <Button
-              key={index}
-              onClick={button.onClick}
-              disabled={!button.canRun}
-              active={button.isActive}
-              title={button.title}
-            >
-              {button.icon ? <Icon /> : button.title}
-            </Button>
-          );
-        })}
-      </div>
+      <ToolBox buttons={buttons}/>
     </BubbleMenu>
   )
 }
@@ -451,7 +378,7 @@ function Tiptap() {
   console.log(editor?.getJSON())
 
   return (
-    <div>
+    <div className='flex flex-col gap-6'>
       <PopupMenu editor={editor} tippyOptions={{ duration: 100 }} />
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
