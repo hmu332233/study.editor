@@ -1,10 +1,10 @@
 'use client'
 
-import Tiptap from "./components/tiptap";
+import Editor from "./components/editor";
 
 function TiptapPage() {
   return (
-    <div className="w-full"><Tiptap /></div>
+    <div className="w-full"><Editor /></div>
   );
 };
 

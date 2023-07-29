@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import cn from 'classnames';
 
 type ItemProps = {
   icon?: any;
@@ -8,11 +9,8 @@ type ItemProps = {
   title: string;
 }
 
-import cn from 'classnames';
-
 const Item = ({ icon, onClick, canRun, isActive, title }: ItemProps) => {
   const [isHovered, setIsHovered] = useState(false);
-
   return (
     <li className={cn({
       'disabled': !canRun,
@@ -35,7 +33,7 @@ const Item = ({ icon, onClick, canRun, isActive, title }: ItemProps) => {
   );
 };
 
-const ToolBox = ({ buttons }: { buttons: ItemProps[] }) => {
+function ToolBox({ buttons }: { buttons: ItemProps[] }) {
   return (
     <ul className="menu menu-horizontal bg-white border rounded-box flex items-center gap-1">
       {buttons.map((button, index) => (

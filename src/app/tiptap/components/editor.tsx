@@ -297,10 +297,6 @@ const PopupMenu = ({ editor, tippyOptions }: { editor: Editor | null, tippyOptio
   )
 }
 
-
-
-
-
 lowlight.registerLanguage('html', html)
 lowlight.registerLanguage('css', css)
 lowlight.registerLanguage('js', js)
