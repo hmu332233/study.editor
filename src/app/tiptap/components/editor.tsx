@@ -30,6 +30,7 @@ import CodeBlock from './codeBlock';
 
 import { defaultContents } from '../constants';
 import ToolBox from './toolbox';
+import SlashCommand from '../extensions/slashCommands';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
@@ -39,6 +40,8 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const buttons = [
     {
       icon: <MdFormatBold size="1em" />,
+      // TODO: 아래와 같은 형식으로 리팩토링하기 / slash command와 같이 사용할 수 있도록
+      // command: ({ editor }) => editor.chain().focus().toggleBold().run(),
       onClick: () => editor.chain().focus().toggleBold().run(),
       canRun: editor.can().chain().focus().toggleBold().run(),
       isActive: editor.isActive('bold'),
@@ -367,6 +370,7 @@ function Tiptap() {
         },
         includeChildren: true, // 자식 노드들에도 placeholder 띄울지 여부
       }),
+      SlashCommand,
     ],
     content: defaultContents,
   })
