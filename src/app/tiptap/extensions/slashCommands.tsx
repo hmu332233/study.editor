@@ -1,36 +1,87 @@
 import { Extension, ReactRenderer } from '@tiptap/react';
-import type { Editor, Range } from '@tiptap/react';
-import { Suggestion } from '@tiptap/suggestion';
+import type { Editor, Range } from '@tiptap/core';
+import { Suggestion, SuggestionKeyDownProps, SuggestionOptions, SuggestionProps } from '@tiptap/suggestion';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 
 import cn from 'classnames';
 import tippy from 'tippy.js';
 
+type Item = any;
+
 const SlashCommands = Extension.create({
   name: 'slashCommands',
   addOptions() {
     return {
-      suggestion: {
+      items: [],
+    };
+  },
+  addProseMirrorPlugins() {
+    console.log(this.options)
+    return [
+      Suggestion<Item>({
+        editor: this.editor,
         char: "/",
         command: ({
           editor,
           range,
-          props,
+          props: item,
         }: {
           editor: Editor;
           range: Range;
-          props: any;
+          props: Item;
         }) => {
-          props.command({ editor, range });
+          item.command({ editor, range });
         },
-      },
-    };
-  },
-  addProseMirrorPlugins() {
-    return [
-      Suggestion({
-        editor: this.editor,
-        ...this.options.suggestion,
+        items: ({ editor, query }: { editor: Editor, query: string }) => {
+          // TODO: query에 따라서 다른 명령어를 보여주도록
+          return this.options.items;
+        },
+        render: () => {
+          let component: ReactRenderer | null = null;
+          let popup: any | null = null;
+
+          return {
+            onStart: (props: SuggestionProps) => {
+              component = new ReactRenderer(CommandList, {
+                props,
+                editor: props.editor,
+              });
+        
+              // @ts-ignore
+              popup = tippy("body", {
+                getReferenceClientRect: props.clientRect,
+                appendTo: () => document.body,
+                content: component.element,
+                showOnCreate: true,
+                interactive: true,
+                trigger: "manual",
+                placement: "bottom-start",
+              });
+            },
+            onUpdate: (props: SuggestionProps) => {
+              component?.updateProps(props);
+        
+              popup &&
+                popup[0].setProps({
+                  getReferenceClientRect: props.clientRect,
+                });
+            },
+            onKeyDown: (props: SuggestionKeyDownProps) => {
+              if (props.event.key === "Escape") {
+                popup?.[0].hide();
+    
+                return true;
+              }
+              // @ts-ignore
+              return component?.ref?.onKeyDown(props.event.key);
+            },
+            onExit: () => {
+              popup?.[0].destroy();
+              component?.destroy();
+            },
+          };
+        },
+        
       }),
     ];
   },
@@ -152,77 +203,23 @@ const CommandList = forwardRef(
 CommandList.displayName = "CommandList";
 
 const SlashCommand = SlashCommands.configure({
-  suggestion: {
-    items: ({ query }: { query: string }) => {
-      // TODO: query에 따라서 다른 명령어를 보여주도록
-      return [
-        {
-          // icon: <MdFormatBold size="1em" />,
-          // TODO: 아래와 같은 형식으로 리팩토링하기 / slash command와 같이 사용할 수 있도록
-          // command: ({ editor }) => editor.chain().focus().toggleBold().run(),
-          command: ({ editor, range }: {
-            editor: Editor,
-            range: Range;
-          }) => editor
-          .chain()
-          .focus()
-          .deleteRange(range)
-          .setNode("heading", { level: 1 })
-          .run(),
-          // canRun: editor.can().chain().focus().toggleBold().run(),
-          // isActive: editor.isActive('bold'),
-          title: 'bold'
-        },
-      ]
+  items: [
+    {
+      // icon: <MdFormatBold size="1em" />,
+      // TODO: 아래와 같은 형식으로 리팩토링하기 / slash command와 같이 사용할 수 있도록
+      // command: ({ editor }) => editor.chain().focus().toggleBold().run(),
+      command: ({ editor, range }: {
+        editor: Editor,
+        range: Range;
+      }) => editor
+      .chain()
+      .focus()
+      .deleteRange(range)
+      .setNode("heading", { level: 1 })
+      .run(),
+      title: 'bold'
     },
-    render: () => {
-      let component: ReactRenderer | null = null;
-      let popup: any | null = null;
-      // const ref = useRef<HTMLDivElement>(null);
-    
-      return {
-        onStart: (props: { editor: Editor; clientRect: DOMRect }) => {
-          component = new ReactRenderer(CommandList, {
-            props,
-            editor: props.editor,
-          });
-    
-          // @ts-ignore
-          popup = tippy("body", {
-            getReferenceClientRect: props.clientRect,
-            appendTo: () => document.body,
-            content: component.element,
-            showOnCreate: true,
-            interactive: true,
-            trigger: "manual",
-            placement: "bottom-start",
-          });
-        },
-        onUpdate: (props: { editor: Editor; clientRect: DOMRect }) => {
-          component?.updateProps(props);
-    
-          popup &&
-            popup[0].setProps({
-              getReferenceClientRect: props.clientRect,
-            });
-        },
-        onKeyDown: (props: { event: KeyboardEvent }) => {
-          if (props.event.key === "Escape") {
-            popup?.[0].hide();
-    
-            return true;
-          }
-    
-          // @ts-ignore
-          return component?.ref?.onKeyDown(props.event.key);
-        },
-        onExit: () => {
-          popup?.[0].destroy();
-          component?.destroy();
-        },
-      };
-    },
-  },
+  ]
 });
 
 
